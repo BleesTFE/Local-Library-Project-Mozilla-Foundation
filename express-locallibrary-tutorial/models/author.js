@@ -28,6 +28,9 @@ AuthorSchema.virtual("url").get(function () {
   // We don't use an arrow function as we'll need the this object
   return `/catalog/author/${this._id}`;
 });
+AuthorSchema.virtual("lifespan").get(function () {
+  return `${this.date_of_birth} - ${this.date_of_death}`;
+})
 
 // Export model
 module.exports = mongoose.model("Author", AuthorSchema);

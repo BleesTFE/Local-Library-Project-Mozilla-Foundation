@@ -13,4 +13,4 @@ Genre.virtual("url").get(function () {
 });
 
 // Export model
-module.exports = mongoose.model("genre", Genre);
+module.exports = mongoose.model("Genre", Genre);

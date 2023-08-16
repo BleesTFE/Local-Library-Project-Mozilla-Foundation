@@ -9,17 +9,19 @@ block content
     p #[strong Imprint:] #{bookinstance.imprint}
 
     p #[strong Status:]
-        if bookinstance.status=='Available'
+        if bookinstance.status == 'Available'
             span.text-success #{bookinstance.status}
-        else if bookinstance.status=='Maintenance'
+        else if bookinstance.status == 'Maintenance'
             span.text-danger #{bookinstance.status}
         else
             span.text-warning #{bookinstance.status}
 
-    if bookinstance.status!='Available'
+    if bookinstance.status != 'Available'
         p #[strong Due back:] #{bookinstance.due_back_formatted}
-    hr
-    p
-        a(href=bookinstance.url + '/delete') Delete book instance
-    p
-        a(href=bookinstance.url + '/update') Update book instance
+        p Do you really want to delete this book instance?
+
+        form(method='POST' action='')
+            div.form-group
+                input#id.form-control(type='hidden',name='id', required='true', value=bookinstance._id )
+
+            button.btn.btn-primary(type='submit') Delete

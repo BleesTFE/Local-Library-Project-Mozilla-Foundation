@@ -3,6 +3,7 @@ const Author = require("../models/author");
 const Book = require("../models/book");
 const async = require("async");
 const { body, validationResult } = require("express-validator");
+const asyncHandler = require("express-async-handler");
 
 
 // Display list of all Genre.
@@ -108,21 +109,94 @@ exports.genre_create_post = [
 
 
 // Display Genre delete form on GET.
-exports.genre_delete_get = (req, res) => {
-    res.send("NOT IMPLEMENTED: Genre delete GET");
-};
+exports.genre_delete_get = asyncHandler(async (req, res, next) => {
+    // Get details of author and all their books (in parallel)
+    const [genre, allBooksInGenre] = await Promise.all([
+        Genre.findById(req.params.id).exec(),
+        Book.find({ genre: req.params.id }).exec(),
+    ]);
+
+    if (genre === null) {
+        // No results.
+        res.redirect("/catalog/genres");
+    }
+
+    res.render("genre_delete", {
+        title: "Delete Genre",
+        genre: genre,
+        genre_books: allBooksInGenre,
+    });
+});
 
 // Handle Genre delete on POST.
-exports.genre_delete_post = (req, res) => {
-    res.send("NOT IMPLEMENTED: Genre delete POST");
-};
+exports.genre_delete_post = asyncHandler(async (req, res, next) => {
+    // Get details of genre and all their books (in parallel)
+    const [genre, allBooksInGenre] = await Promise.all([
+        Genre.findById(req.params.id).exec(),
+        Book.find({ genre: req.params.id }).exec(),
+    ]);
+
+    if (allBooksInGenre.length > 0) {
+        // Genre has books. Render in same way as for GET route.
+        res.render("genre_form", {
+            title: "Delete Genre",
+            genre: genre,
+            genre_books: allBooksInGenre,
+        });
+        return;
+    } else {
+        // Genre has no books. Delete object and redirect to the list of genres.
+        await Genre.findByIdAndRemove(req.body.genreid);
+        res.redirect("/catalog/genres");
+    }
+});
 
 // Display Genre update form on GET.
-exports.genre_update_get = (req, res) => {
-    res.send("NOT IMPLEMENTED: Genre update GET");
-};
+exports.genre_update_get = asyncHandler( async(req, res, next) => {
+    const [genre] = await Promise.all([
+        Genre.findById(req.params.id).exec(),
+    ])
+    if (genre === null) {
+        err = new Error("Genre not found");
+        err.status = 404;
+        return next(err);
+    }
+    res.render("genre_form", {
+        title: "Update genre",
+        genre: genre
+    });
+});
 
 // Handle Genre update on POST.
-exports.genre_update_post = (req, res) => {
-    res.send("NOT IMPLEMENTED: Genre update POST");
-};
+exports.genre_update_post = [
+        body("name", "Genre must not be empty")
+        .trim()
+        .isLength({min: 1})
+        .escape(),
+    // Process request after validation and sanitization.
+    asyncHandler( async(req, res, next) => {
+        const errors = validationResult(req);
+        const genre = new Genre({
+            name: req.body.name,
+            _id: req.params.id,
+        });
+        if (!errors.isEmpty()) {
+            // There are errors. Render form again with sanitized values/error messages.
+
+            // Get all authors and genres for form
+            const [genre] = await Promise.all([
+                Genre.findById(req.params.id).exec()
+            ]);
+
+            res.render("genre_form", {
+                title: "Update genre",
+                genre: genre,
+                errors: errors.array(),
+            });
+            return;
+        } else {
+            const thegenre = await Genre.findByIdAndUpdate(req.params.id, genre, {});
+            res.redirect(thegenre.url);
+        }
+    }),
+];

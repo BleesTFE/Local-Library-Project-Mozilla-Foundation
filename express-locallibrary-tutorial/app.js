@@ -13,6 +13,7 @@ var app = express();
 
 
 const mongoose = require('mongoose');
+const fileUpload = require("express-fileupload");
 mongoose.set('strictQuery', false);
 const mongoDB = "mongodb+srv://Username:Password@ballsack.8krnopf.mongodb.net/local_library?retryWrites=true&w=majority";
 
@@ -26,13 +27,13 @@ async function main() {
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
-
+app.use(fileUpload());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(express.static('images'))
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/catalog", catalogRouter); // Add catalog routes to middleware chain.
@@ -41,7 +42,6 @@ app.use("/catalog", catalogRouter); // Add catalog routes to middleware chain.
 app.use(function(req, res, next) {
   next(createError(404));
 });
-
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development

@@ -6,7 +6,12 @@ const book_controller = require("../controllers/bookController");
 const author_controller = require("../controllers/authorController");
 const genre_controller = require("../controllers/genreController");
 const book_instance_controller = require("../controllers/bookinstanceController");
+const fileUpload = require("express-fileupload");
 
+
+//var app = express();
+//app.use(fileUpload());
+//router.use(fileUpload());
 /// BOOK ROUTES ///
 
 // GET catalog home page.
@@ -52,7 +57,6 @@ router.post("/author/:id/delete", author_controller.author_delete_post);
 
 // GET request to update Author.
 router.get("/author/:id/update", author_controller.author_update_get);
-
 // POST request to update Author.
 router.post("/author/:id/update", author_controller.author_update_post);
 

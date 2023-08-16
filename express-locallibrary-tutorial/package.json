@@ -13,6 +13,7 @@
     "debug": "~2.6.9",
     "express": "^4.18.2",
     "express-async-handler": "^1.2.0",
+    "express-fileupload": "^1.4.0",
     "express-validator": "^6.15.0",
     "http-errors": "~1.6.3",
     "luxon": "^3.3.0",

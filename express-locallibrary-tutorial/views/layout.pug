@@ -8,12 +8,41 @@ html(lang='en')
     script(src="https://code.jquery.com/jquery-3.5.1.slim.min.js", integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj", crossorigin="anonymous")
     script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js", integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV", crossorigin="anonymous")
     link(rel='stylesheet', href='/stylesheets/style.css')
+    style.
+      body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f5f5f5;
+      }
+      .sidebar {
+        background-color: #283593;
+        color: #ffffff;
+        height: 100vh;
+        padding-top: 20px;
+      }
+      .sidebar-nav {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .sidebar-nav li {
+        margin-bottom: 10px;
+      }
+      .sidebar-nav a {
+        color: #ffffff;
+        text-decoration: none;
+        transition: color 0.5s ease;
+      }
+      .sidebar-nav a:hover {
+        color: #ff4081;
+      }
   body
     div(class='container-fluid')
       div(class='row')
-        div(class='col-sm-2')
+        div(class='col-2 sidebar')
           block sidebar
             ul(class='sidebar-nav')
+              li
+                a(href='/catalog/search') Search database
               li
                 a(href='/catalog') Home
               li
@@ -34,6 +63,5 @@ html(lang='en')
                 a(href='/catalog/book/create') Create new book
               li
                 a(href='/catalog/bookinstance/create') Create new book instance
-
-        div(class='col-sm-10')
+        div(class='col-10')
           block content

@@ -7,7 +7,7 @@ const author_controller = require("../controllers/authorController");
 const genre_controller = require("../controllers/genreController");
 const book_instance_controller = require("../controllers/bookinstanceController");
 const fileUpload = require("express-fileupload");
-
+const search_controller = require("../controllers/searchController");
 
 //var app = express();
 //app.use(fileUpload());
@@ -16,6 +16,10 @@ const fileUpload = require("express-fileupload");
 
 // GET catalog home page.
 router.get("/", book_controller.index);
+
+router.get("/search", search_controller.search_get);
+
+router.get("/search/api", search_controller.search_api);
 
 // GET request for creating a Book. NOTE This must come before routes that display Book (uses id).
 router.get("/book/create", book_controller.book_create_get);
